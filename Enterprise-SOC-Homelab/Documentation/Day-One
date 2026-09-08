@@ -1,1 +1,27 @@
+# Daily Log — 2026/08/08
+
+## 🎯 Objectives
+
+- install VMs needed
+- Setup the structure
+
+## 🔨 Work Completed
+Ubuntu installed
+Kali linux installed
+
+### Task 1 — install kali linux
+
+**What I did:**
+- installed and setup the kali linux VM inside VMware
+
+**Why I did it:**
+- This will be the attacking device which will be used to test the SIEM
+### Task 2 — install ubuntu
+
+**What I did:**
+- installed and setup the Ubuntu VM inside VMware
+
+**Why I did it:**
+- This will be a dedicated server for the wazuh interface
+
 
