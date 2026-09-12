@@ -1,4 +1,4 @@
-#Cybersecurity Homelabs
+# Cybersecurity Homelabs
 
 A collection of practical cybersecurity homelab projects built to develop hands-on skills in networking, Linux, Windows, security monitoring, detection, and incident response.
 
@@ -6,8 +6,8 @@ A collection of practical cybersecurity homelab projects built to develop hands-
 
 These labs are designed to simulate realistic IT and cybersecurity environments while building practical experience through hands-on projects.
 
-##Projects
-###Enterprise SOC Homelab
+## Projects
+### Enterprise SOC Homelab
 
 An isolated enterprise-style environment designed to practise:
 
@@ -23,7 +23,7 @@ Network security
 
 Status: In Progress
 
-##Technologies:
+## Technologies:
 VMware
 Windows Server
 Windows
