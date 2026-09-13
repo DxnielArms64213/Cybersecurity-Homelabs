@@ -1,164 +1,183 @@
-# Overall Architecture
+# Overall SOC Architecture
 
 ## Overview
 
-The Enterprise SOC Homelab is designed to simulate a small enterprise environment containing a domain controller, endpoint, security workstation and central security monitoring server.
+The Enterprise SOC Homelab is designed to simulate the basic workflow of a Security Operations Centre.
 
-The environment is intended to provide hands-on experience with security monitoring, detection, investigation and incident response.
+The environment contains systems that represent an enterprise endpoint, domain infrastructure, security testing workstation and central security monitoring platform.
 
-## Current and Planned Architecture
+The primary objective is to demonstrate the complete security workflow from suspicious activity through to detection, investigation and incident response.
+
+## SOC Architecture
 
 ```text
-                         ENTERPRISE SOC HOMELAB
-
-                              Kali Linux
-                         Security/Attack Workstation
-                            192.168.50.20
-                                  │
-                                  │
-                           VMware VMnet1
-                          192.168.50.0/24
-                                  │
-              ┌───────────────────┼───────────────────┐
-              │                   │                   │
-              ▼                   ▼                   ▼
-       Windows Server       Windows Client       Ubuntu Server
-        192.168.50.30       192.168.50.40        192.168.50.10
-        AD + DNS              Endpoint           Future Wazuh
-       Domain Controller                            Server
+                         Security Testing
+                               │
+                               ▼
+                        ┌──────────────┐
+                        │ Kali Linux   │
+                        │ Attack/Test  │
+                        │ Workstation  │
+                        └──────┬───────┘
+                               │
+                       Simulated Activity
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │   Windows Client   │
+                    │                     │
+                    │ Windows Event Logs  │
+                    │       +             │
+                    │      Sysmon         │
+                    │       +             │
+                    │   Wazuh Agent       │
+                    └──────────┬──────────┘
+                               │
+                         Security
+                         Telemetry
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │   Ubuntu Server     │
+                    │       Wazuh         │
+                    │   Monitoring/SIEM   │
+                    └──────────┬──────────┘
+                               │
+                           Detection
+                               │
+                               ▼
+                            Alert
+                               │
+                               ▼
+                           Triage
+                               │
+                               ▼
+                        Investigation
+                               │
+                               ▼
+                    MITRE ATT&CK Mapping
+                               │
+                               ▼
+                      Incident Response
+                               │
+                               ▼
+                    Documentation / Report
 ```
 
 ## Main Components
 
 ### Kali Linux
 
-Kali Linux acts as the security and attack workstation.
+Kali Linux acts as the security testing workstation.
 
-It will be used to:
+It will be used to generate controlled activity against systems inside the lab.
 
-* Perform reconnaissance
-* Test the security of the lab
-* Simulate controlled attacks
-* Generate suspicious activity
-* Test whether security monitoring detects the activity
+Examples include:
 
-All testing will be performed against systems within the authorised lab environment.
+* Reconnaissance
+* Network testing
+* Controlled attack simulations
+* Testing detection capabilities
+
+The purpose is not simply to attack the systems, but to generate realistic security events that can then be detected and investigated.
 
 ### Windows Server
 
-Windows Server acts as the central Windows infrastructure server.
+Windows Server provides the core Windows enterprise infrastructure.
 
-It provides:
+It currently provides:
 
 * Active Directory Domain Services
 * Domain Controller functionality
 * DNS
-* Domain user management
+* Domain users
 * Security groups
 * Group Policy
 
-The server currently uses:
-
-`192.168.50.30`
+This provides the foundation for the simulated enterprise environment.
 
 ### Windows Client
 
-The Windows Client will act as a normal enterprise endpoint.
+The Windows Client represents an employee workstation within the simulated organisation.
 
-It will eventually:
+It will eventually contain:
 
-* Join the Active Directory domain
-* Receive Group Policy
-* Generate Windows security events
-* Run Sysmon
-* Run the Wazuh Agent
-* Provide endpoint telemetry for the SOC
+* Windows Event Logging
+* Sysmon
+* Wazuh Agent
+* Active Directory domain membership
+* Security baseline configuration
 
-Planned IP address:
-
-`192.168.50.40`
+This will be the primary endpoint monitored by the SOC.
 
 ### Ubuntu Server
 
-Ubuntu Server is dedicated to becoming the central Wazuh server.
+Ubuntu Server will become the central Wazuh server.
 
-It will eventually receive security telemetry from the Windows Client and provide:
+It will eventually receive telemetry from the Windows Client through the Wazuh Agent.
 
-* Security monitoring
-* Detection
-* Alerting
-* Log analysis
-* Endpoint visibility
+Wazuh will provide the central monitoring and detection functionality of the lab.
 
-Current IP address:
+## Security Workflow
 
-`192.168.50.10`
-
-Wazuh has not yet been installed.
-
-## SOC Data Flow
-
-The intended security monitoring pipeline is:
+The project is designed around the following workflow:
 
 ```text
-                 Security Testing
-                       │
-                       ▼
-                  Windows Client
-                       │
-              ┌────────┴────────┐
-              │                 │
-      Windows Event Logs      Sysmon
-              │                 │
-              └────────┬────────┘
-                       ▼
-                 Wazuh Agent
-                       │
-                       ▼
-                Wazuh Server
-                       │
-                       ▼
-                Detection Rules
-                       │
-                       ▼
-                     Alert
-                       │
-                       ▼
-                   Triage
-                       │
-                       ▼
-                Investigation
-                       │
-                       ▼
-              Incident Response
+Security Event
+      ↓
+Telemetry Generated
+      ↓
+Wazuh Receives Telemetry
+      ↓
+Detection
+      ↓
+Alert
+      ↓
+Triage
+      ↓
+Investigation
+      ↓
+Determine Scope
+      ↓
+Identify Indicators of Compromise
+      ↓
+MITRE ATT&CK Mapping
+      ↓
+Containment
+      ↓
+Remediation
+      ↓
+Recovery
+      ↓
+Incident Report
 ```
 
 ## Purpose of the Architecture
 
-The purpose of this architecture is to recreate the basic workflow of a security operations environment.
+The goal is to demonstrate more than simply installing cybersecurity tools.
 
-Rather than simply installing security tools, the project will demonstrate the complete process:
+The lab will demonstrate how security professionals can:
 
-```text
-Attack
-  ↓
-Telemetry
-  ↓
-Detection
-  ↓
-Alert
-  ↓
-Triage
-  ↓
-Investigation
-  ↓
-MITRE ATT&CK Mapping
-  ↓
-Containment
-  ↓
-Remediation
-  ↓
-Incident Report
-```
+* Generate security events
+* Collect telemetry
+* Detect suspicious behaviour
+* Investigate alerts
+* Identify indicators of compromise
+* Map activity to MITRE ATT&CK
+* Perform incident response
+* Document security incidents
 
-This allows the project to demonstrate practical cybersecurity skills rather than simply showing that several virtual machines and security tools were installed.
+This creates a practical end-to-end SOC workflow.
+
+## Relationship Between the Systems
+
+The systems have different roles within the SOC:
+
+| System         | Primary Role                            |
+| -------------- | --------------------------------------- |
+| Kali Linux     | Security testing and attack simulation  |
+| Windows Server | Active Directory and DNS infrastructure |
+| Windows Client | Monitored enterprise endpoint           |
+| Ubuntu Server  | Central Wazuh monitoring server         |
+
+The network architecture defines **how these systems communicate**, while this architecture defines **how they work together as a security operation**.
