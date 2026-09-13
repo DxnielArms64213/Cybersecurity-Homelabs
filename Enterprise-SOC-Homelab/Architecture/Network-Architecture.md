@@ -2,9 +2,9 @@
 
 ## Overview
 
-The Enterprise SOC Homelab uses an isolated VMware Host-Only network to allow the virtual machines to communicate with each other without directly exposing the lab environment to the normal home network.
+The Enterprise SOC Homelab uses a VMware Host-Only network to create an isolated environment for the virtual machines.
 
-This provides a controlled environment for cybersecurity testing, monitoring and incident-response exercises.
+The network allows the systems within the lab to communicate with each other while keeping the environment separate from the normal home network.
 
 ## Network Configuration
 
@@ -16,19 +16,19 @@ This provides a controlled environment for cybersecurity testing, monitoring and
 | Subnet Mask  | `255.255.255.0`   |
 | DHCP         | Disabled          |
 
-DHCP is disabled so that important systems can be assigned predictable static IP addresses.
+DHCP is disabled so that the lab systems can use predictable static IP addresses.
 
 ## IP Address Plan
 
 | Device         | Role                        | IP Address      |
 | -------------- | --------------------------- | --------------- |
 | Windows Host   | VMware Host                 | `192.168.50.1`  |
-| Ubuntu Server  | Future Wazuh Server         | `192.168.50.10` |
-| Kali Linux     | Security/Attack Workstation | `192.168.50.20` |
+| Kali Linux     | Security/Attack Workstation | `192.168.50.10` |
+| Ubuntu Server  | Future Wazuh Server         | `192.168.50.20` |
 | Windows Server | Domain Controller / DNS     | `192.168.50.30` |
 | Windows Client | Domain Endpoint             | `192.168.50.40` |
 
-## Network Architecture
+## Network Diagram
 
 ```text
                          Windows Host
@@ -39,68 +39,37 @@ DHCP is disabled so that important systems can be assigned predictable static IP
                         Host-Only Network
                        192.168.50.0/24
                               │
-        ┌─────────────────────┼─────────────────────┐
-        │                     │                     │
-        ▼                     ▼                     ▼
-   Kali Linux           Windows Server        Ubuntu Server
-  192.168.50.20         192.168.50.30         192.168.50.10
- Security/Attack          AD + DNS             Future Wazuh
-   Workstation            Controller              Server
-                              │
-                              │
-                              ▼
-                       Windows Client
-                       192.168.50.40
-                         Domain Endpoint
+              ┌───────────────┼────────────────┐
+              │               │                │
+              ▼               ▼                ▼
+        Kali Linux      Ubuntu Server    Windows Server
+       192.168.50.10    192.168.50.20    192.168.50.30
+      Security/Attack   Future Wazuh       AD + DNS
+       Workstation        Server          Controller
+                                                  │
+                                                  ▼
+                                           Windows Client
+                                           192.168.50.40
+                                            Domain Endpoint
 ```
 
-## Why This Architecture Was Chosen
+## Why Host-Only Networking Was Chosen
 
-### Host-Only Networking
+Host-Only networking provides an isolated environment for the SOC lab.
 
-Host-Only networking was selected because the SOC lab needs to remain isolated from the normal home network.
+The virtual machines can communicate with each other and with the Windows host, while remaining separated from the normal home network.
 
-The virtual machines can communicate with each other and with the Windows host, while the lab is separated from the physical network.
+This is important because the lab will eventually be used to generate and investigate suspicious activity.
 
-This makes the environment suitable for controlled security testing.
+## Why Static IP Addresses Are Used
 
-### Static IP Addresses
+Static IP addresses provide predictable addressing for important infrastructure.
 
-Static IP addresses are used for important infrastructure systems.
+For example:
 
-This provides predictable addressing for services such as:
+* Windows Server provides Active Directory and DNS
+* Ubuntu will provide Wazuh
+* Kali provides the security testing workstation
+* Windows Client acts as the monitored endpoint
 
-* Active Directory
-* DNS
-* Wazuh
-* Windows endpoints
-* Security testing
-
-For example, the Windows Client will use the Windows Server at `192.168.50.30` for DNS and domain-related services.
-
-### Network Isolation
-
-Keeping the lab on its own subnet makes it possible to safely simulate suspicious activity and attacks against intentionally vulnerable or test systems without accidentally targeting devices on the normal home network.
-
-## Future Network Flow
-
-The eventual SOC data flow will look approximately like this:
-
-```text
-Windows Client
-      │
-      │ Windows Events
-      │ + Sysmon
-      ▼
-Wazuh Agent
-      │
-      ▼
-Ubuntu Wazuh Server
-      │
-      ▼
-Detection / Alerts
-      │
-      ▼
-SOC Investigation
-```
-
+Predictable addresses make it
