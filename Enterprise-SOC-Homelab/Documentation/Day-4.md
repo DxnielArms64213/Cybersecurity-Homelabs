@@ -2,40 +2,30 @@
 
 ## Objectives
 
-* Configure the Windows Server Active Directory environment
-* Create the initial Active Directory organisational structure
-* Create a domain user account
-* Create a security group for SOC analysts
-* Configure a security baseline Group Policy
-* Enable Windows security auditing
+* Configure the Active Directory organisational structure
+* Create the required domain user account
+* Create a security group for SOC users
+* Configure a security baseline Group Policy Object
+* Configure Windows security auditing
 * Prepare the environment for the future Windows Client
 
 ## Work Completed
 
-* Confirmed the existing Windows Server configuration
-* Created the Active Directory organisational units:
-
-  * `Lab-Users`
-  * `Lab-Computers`
-  * `Lab-Servers`
-  * `Lab-Groups`
-* Created the domain user `labuser`
-* Placed `labuser` inside `Lab-Users`
+* Created custom Active Directory organisational units
+* Created the `labuser` domain account
+* Placed `labuser` in the `Lab-Users` organisational unit
 * Created the `SOC-Analysts` security group
-* Added `labuser` to `SOC-Analysts`
+* Added `labuser` to the `SOC-Analysts` group
 * Created the `Lab - Security Baseline` Group Policy Object
 * Linked the GPO to `Lab-Computers`
-* Configured several Windows security auditing policies
-* Verified that the Group Policy was correctly linked
-* Prepared the Active Directory environment for the future Windows Client
+* Configured Advanced Audit Policy settings
+* Verified the Group Policy configuration
 
-### Task 1 — Configure the Active Directory structure
+### Task 1 — Create the Active Directory Organisational Structure
 
 **What I did:**
 
-* Confirmed that Active Directory Domain Services was already installed
-* Confirmed that the Windows Server was functioning as the Domain Controller
-* Created the following custom organisational units:
+* Created the following organisational units:
 
   * `Lab-Users`
   * `Lab-Computers`
@@ -44,132 +34,132 @@
 
 **Why I did it:**
 
-* Organisational units provide a way to structure the lab environment
-* They allow Group Policy to be applied to specific types of systems
-* Separating users, computers, servers and groups will make the environment easier to manage as the lab grows
+* The default Active Directory containers are not sufficient for representing the structure of the simulated enterprise environment
+* Custom organisational units provide a logical structure for managing users, computers, servers and security groups
+* The structure will also allow security policies to be applied to specific types of systems
 
-### Task 2 — Create the lab user
+### Task 2 — Create the Domain User
 
 **What I did:**
 
-* Created the domain user:
-
-  * `labuser`
-* Placed the account inside `Lab-Users`
+* Created the domain user `labuser`
+* Placed the account inside the `Lab-Users` organisational unit
 
 **Why I did it:**
 
-* A dedicated domain account provides a realistic user identity for the simulated enterprise environment
-* The account can later be used to generate authentication and account-management events for security monitoring
+* The lab requires realistic domain accounts for authentication and security testing
+* The account will later be used when testing authentication events, account activity and security monitoring
 
-### Task 3 — Create the SOC security group
+### Task 3 — Create the SOC Security Group
 
 **What I did:**
 
-* Created the security group:
-
-  * `SOC-Analysts`
-* Configured it as a Global Security group
+* Created the `SOC-Analysts` group inside `Lab-Groups`
+* Configured the group as a Global Security group
 * Added `labuser` as a member
 
 **Why I did it:**
 
-* Security groups allow permissions to be managed through groups rather than individual users
-* This provides a more realistic Active Directory structure
-* The group can later be used when configuring permissions and access within the lab
+* Security groups provide a way to manage permissions and access based on roles
+* The `SOC-Analysts` group represents a security operations role within the simulated enterprise environment
 
-### Task 4 — Configure the security baseline Group Policy
-
-**What I did:**
-
-* Created the Group Policy Object:
-
-  * `Lab - Security Baseline`
-* Linked the GPO to:
-
-  * `Lab-Computers`
-
-**Why I did it:**
-
-* Group Policy provides centralised configuration for domain computers
-* The future Windows Client can receive the security configuration automatically when it is placed inside `Lab-Computers`
-* This provides a more realistic enterprise security-management environment
-
-### Task 5 — Configure Windows security auditing
+### Task 4 — Create the Security Baseline GPO
 
 **What I did:**
 
-Configured the following Advanced Audit Policy settings:
+* Created the `Lab - Security Baseline` Group Policy Object
+* Linked the GPO to the `Lab-Computers` organisational unit
+* Configured security auditing policies
 
-* Audit Process Creation
-* Audit Logon
+The following audit policies were configured:
+
+* Audit Process Creation — Success
+* Audit Logon — Success and Failure
 * Audit Logoff
-* Audit User Account Management
-* Audit Security Group Management
-* Audit Audit Policy Change
-
-Successful and failed events were enabled where appropriate.
+* Audit User Account Management — Success and Failure
+* Audit Security Group Management — Success and Failure
+* Audit Audit Policy Change — Success and Failure
 
 **Why I did it:**
 
-* These policies generate useful security telemetry
-* Process creation can provide visibility into programs being executed
-* Logon auditing can identify successful and failed authentication attempts
-* User and group management auditing can identify account and privilege changes
-* Audit Policy Change events can identify changes to security auditing configuration
+* Security auditing generates useful telemetry for monitoring and investigation
+* Process creation events can help identify suspicious program execution
+* Logon and logoff events provide authentication and session information
+* User and security group auditing can identify account and privilege changes
+* Audit Policy Change events can identify modifications to the auditing configuration
+* These events will later provide useful data for the Wazuh monitoring environment
 
-These events will eventually provide useful data for the Wazuh monitoring system.
-
-### Task 6 — Verify the Group Policy configuration
+### Task 5 — Verify the Group Policy Configuration
 
 **What I did:**
 
-* Confirmed that `Lab - Security Baseline` was linked to `Lab-Computers`
-* Verified that the required auditing policies were configured
-* Confirmed that the Windows Server configuration was ready for the next stage
+* Verified that the `Lab - Security Baseline` GPO was linked to `Lab-Computers`
+* Confirmed that the required auditing policies were configured
 
 **Why I did it:**
 
-* Verifying the configuration helps prevent problems when the Windows Client is introduced
-* The client will later inherit the security baseline when it is joined to the domain and placed inside `Lab-Computers`
+* Verification ensures that the security baseline is correctly configured before Windows Client systems are added to the environment
+* The Windows Client will later inherit these policies when it is placed in the `Lab-Computers` organisational unit
 
-## 📝 Current Status
+## Current Active Directory Structure
 
-* ✅ Kali Linux installed
-* ✅ Ubuntu Server installed
-* ✅ VMware Host-Only network configured
-* ✅ Ubuntu static IP configured: `192.168.50.20/24`
-* ✅ Windows Server installed
-* ✅ Windows Server static IP configured: `192.168.50.30/24`
-* ✅ Active Directory Domain Services configured
-* ✅ Windows Server promoted to Domain Controller
-* ✅ DNS configured
-* ✅ Active Directory organisational structure created
-* ✅ `labuser` domain account created
-* ✅ `SOC-Analysts` security group created
-* ✅ `labuser` added to `SOC-Analysts`
-* ✅ `Lab - Security Baseline` GPO created
-* ✅ Security auditing configured
-* ✅ GPO linked to `Lab-Computers`
-* ⏳ Windows Client not configured yet
-* ⏳ Sysmon not configured yet
-* ⏳ Wazuh **not installed yet**
-* ⏳ Detection rules not configured yet
-* ⏳ Incident-response testing not started yet
+```text
+SOCLAB.LOCAL
+├── Lab-Users
+│   └── labuser
+├── Lab-Computers
+├── Lab-Servers
+└── Lab-Groups
+    └── SOC-Analysts
+        └── labuser
+```
+
+## Current Network Configuration
+
+| Device         | IP Address      | Role                          |
+| -------------- | --------------- | ----------------------------- |
+| Windows Host   | `192.168.50.1`  | VMware Host / VMnet1          |
+| Kali Linux     | `192.168.50.10` | Security / Attack Workstation |
+| Ubuntu Server  | `192.168.50.20` | Future Wazuh Server           |
+| Windows Server | `192.168.50.30` | Domain Controller / DNS       |
+| Windows Client | `192.168.50.40` | Future Enterprise Endpoint    |
+
+Network: `192.168.50.0/24`
+
+DHCP: Disabled
+
+## Current Status
+
+* Kali Linux installed
+* Ubuntu Server installed
+* VMware Host-Only network configured
+* Ubuntu Server static IP configured: `192.168.50.20/24`
+* Windows Server 2022 installed
+* Windows Server static IP configured: `192.168.50.30/24`
+* `DC01` configured as Domain Controller
+* `soclab.local` Active Directory domain configured
+* DNS configured
+* Custom Active Directory organisational units created
+* `labuser` domain account created
+* `SOC-Analysts` security group created
+* `labuser` added to `SOC-Analysts`
+* `Lab - Security Baseline` GPO created
+* Security auditing configured
+* GPO linked to `Lab-Computers`
+* Windows Client not yet configured
+* Sysmon not yet configured
+* Wazuh not yet installed
+* Detection rules not yet configured
+* Incident response testing not yet started
 
 ## Next Steps
 
-The next stage will be creating the Windows Client VM.
-
-The planned client configuration is:
-
-```text
-Hostname: WIN-CLIENT
-IP: 192.168.50.40
-DNS: 192.168.50.30
-Network: VMware VMnet1 Host-Only
-```
-
-The Windows Client will then be joined to the Active Directory domain and placed inside `Lab-Computers`.
-
-After the client is working correctly, Sysmon and the Wazuh Agent can be introduced to begin building the endpoint telemetry pipeline.
+* Create the Windows Client VM
+* Configure the Windows Client with `192.168.50.40/24`
+* Configure `192.168.50.30` as the client's DNS server
+* Join the Windows Client to the `soclab.local` domain
+* Move the computer account into `Lab-Computers`
+* Verify the security baseline GPO is applied
+* Install and configure Sysmon
+* Install the Wazuh Agent
+* Prepare Ubuntu Server for the Wazuh deployment
