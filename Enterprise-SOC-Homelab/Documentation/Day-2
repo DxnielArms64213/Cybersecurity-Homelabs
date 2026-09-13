@@ -1,6 +1,6 @@
 # Daily Log — 2026/09/10
 
-## 🎯 Objectives
+## Objectives
 
 * Configure the Ubuntu Server VM
 * Configure the isolated Host-Only network
@@ -8,7 +8,7 @@
 * Test network connectivity
 * Prepare Ubuntu for the future Wazuh installation
 
-## 🔨 Work Completed
+## Work Completed
 
 * Configured the VMware Host-Only network using the `192.168.50.0/24` subnet
 * Identified Ubuntu's network interface as `ens33`
