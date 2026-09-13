@@ -4,7 +4,7 @@
 
 Active Directory provides centralised identity and management for the Windows systems within the Enterprise SOC Homelab.
 
-The environment uses organisational units, domain users and security groups to replicate a basic enterprise directory structure.
+The environment uses organisational units, domain users and security groups to create a basic enterprise-style directory structure.
 
 ## Active Directory Structure
 
@@ -29,33 +29,31 @@ YOUR-DOMAIN
 
 Contains user accounts belonging to the lab environment.
 
-Current user:
+Current account:
 
 ```text
 labuser
 ```
 
-Separating users into their own OU makes the directory easier to manage and provides a dedicated location for future user accounts.
+Separating users into their own OU provides a dedicated location for managing domain users.
 
 ### Lab-Computers
 
-This OU is intended to contain Windows endpoint computers.
+Contains domain-joined endpoint computers.
 
-The future Windows Client will be placed here.
+The future Windows Client will be placed inside this OU.
 
-This OU is also important because the security baseline Group Policy is linked to it.
+The security baseline Group Policy is also linked to this OU.
 
 ### Lab-Servers
 
-This OU is intended to contain server systems that are part of the lab environment.
-
-It provides a separate location for server objects as the environment grows.
+Provides a dedicated organisational unit for server objects as the environment grows.
 
 ### Lab-Groups
 
 Contains security groups used to manage permissions and access.
 
-Current group:
+Current security group:
 
 ```text
 SOC-Analysts
@@ -63,7 +61,7 @@ SOC-Analysts
 
 ## Domain User
 
-A domain user named:
+The domain user:
 
 ```text
 labuser
@@ -75,7 +73,7 @@ was created and placed inside:
 Lab-Users
 ```
 
-The account provides a realistic identity that can later be used to generate authentication and account-management activity.
+This provides a realistic user identity that can later generate authentication and account-management activity.
 
 ## Security Group
 
@@ -85,33 +83,31 @@ The following Global Security group was created:
 SOC-Analysts
 ```
 
-`labuser` was added as a member.
+The `labuser` account was added as a member.
 
-Using a security group allows permissions to be assigned to a role or group of users instead of individually configuring each account.
+Using security groups allows access and permissions to be assigned according to a user's role rather than configuring every account individually.
 
 ## Why This Structure Was Chosen
 
-The structure provides a simple but realistic starting point for the lab.
-
-It separates:
+The structure separates the main types of Active Directory objects used within the lab:
 
 * Users
 * Computers
 * Servers
 * Security groups
 
-This will become increasingly useful as more systems and accounts are added.
+This makes the environment easier to manage and provides a foundation for future Group Policy configuration.
 
-It also provides a foundation for applying different Group Policy configurations to different parts of the environment.
+It also creates a more realistic enterprise-style Active Directory environment.
 
 ## Future Expansion
 
-As the SOC lab develops, additional users, computers and security groups can be added without redesigning the entire directory structure.
+As the SOC lab develops, additional users, computers and groups can be added to the existing structure.
 
-The Windows Client will eventually be placed inside:
+The Windows Client will eventually be placed into:
 
 ```text
 Lab-Computers
 ```
 
-This will allow it to receive the security baseline Group Policy.
+This will allow it to receive the security baseline Group Policy configured for the lab.
